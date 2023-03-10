@@ -2,8 +2,14 @@ import { useContext, useState } from "react";
 import HttpCall from "../../utils/HttpClient";
 import { ProductContext } from '../../ProductContext';
 
-const CreateProduct = () => {
-   const [create, setCreate] = useState({});
+const CreateProduct = ({ productObject }) => {
+   const [create, setCreate] = useState({
+      title: productObject?.title ? productObject?.title : "",
+      category: productObject?.category ? productObject?.category : "",
+      price: productObject?.price ? productObject?.price : "",
+      discountPercentage: productObject?.discountPercentage ? productObject?.discountPercentage : "",
+      description: productObject?.description ? productObject?.description : "",
+   });
    const productData = useContext(ProductContext);
    const currentProducts = useContext(ProductContext);
 
@@ -20,31 +26,44 @@ const CreateProduct = () => {
 
    const handleSubmit = async (event) => {
       event.preventDefault();
-      const httpCall = new HttpCall(baseUrl);
-      productData?.setProductData({ ...create })
+      const customUrl = productObject ? `${baseUrl}/${productObject.id}` : baseUrl
+      const httpCall = new HttpCall(customUrl);
+
+      const data = productObject ? {
+         title: create.title
+      } : { ...create }
+
+      productData?.setProductData({ ...data })
 
       await httpCall.makePostApiCall(productData?.productData);
       await fetchAllProducts();
       setCreate({});
    };
 
+   const handleChnage = (e) => {
+      setCreate((prevState) => ({
+         ...prevState,
+         [e.target.name]: e.target.value
+      }))
+   }
+
    return (
       <form onSubmit={e => handleSubmit(e)}>
-         <div className="wrapper" style={{width: "500px", height: "500px", marginTop: "30px", marginBottom: "30px", padding: "20px", fontSize: "14px"}}>
-            <div style={{display: "flex", width: "400px"}}>
-               <input type="text" value={create.title} onChange={e => setCreate({title: e.target.value})} placeholder="Product Title" required />
-               <input type="text" value={create.category} onChange={e => setCreate({title: e.target.category})} placeholder="Product Category" />
+         <div className="wrapper" style={{ width: "500px", height: "500px", marginTop: "30px", marginBottom: "30px", padding: "20px", fontSize: "14px" }}>
+            <div style={{ display: "flex", width: "400px" }}>
+               <input type="text" name={"title"} value={create.title} onChange={e => handleChnage(e)} placeholder="Product Title" required />
+               <input type="text" name={"category"} value={create.category} onChange={e => handleChnage(e)} placeholder="Product Category" />
             </div>
-            <div style={{display: "flex", fontSize: "14px"}}>
-               <input type="number" value={create.price} onChange={e => setCreate({title: e.target.price})} placeholder="Product Price" required />
-               <input type="text" value={create.discountPercentage} onChange={e => setCreate({title: e.target.discountPercentage})} placeholder="Product discount Percentage" />
+            <div style={{ display: "flex", fontSize: "14px" }}>
+               <input type="number" name={"price"} value={create.price} onChange={e => handleChnage(e)} placeholder="Product Price" required />
+               <input type="text" name={"discountPercentage"} value={create.discountPercentage} onChange={e => handleChnage(e)} placeholder="Product discount Percentage" />
             </div>
             <div>
-               <input type="text" value={create.description} onChange={e => setCreate({title: e.target.description})} placeholder="Product Description" />
+               <input type="text" name={"description"} value={create.description} onChange={e => handleChnage(e)} placeholder="Product Description" />
             </div>
          </div>
 
-         <button>Create Product</button>
+         <button type="submit">{productObject ? "Edit" : "Create"} Product</button>
       </form>
    );
 }

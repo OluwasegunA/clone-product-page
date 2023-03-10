@@ -5,7 +5,9 @@ import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import HttpCall from './utils/HttpClient';
 import Category from './components/Product/Category';
+import CreateProduct from './components/Product/CreateProduct';
 import { ProductContext } from './ProductContext';
+
 
 const App = () => {
   const [isloading, setIsLoading] = useState(true);
@@ -56,15 +58,19 @@ const App = () => {
     searchQuery?.setSearchQuery('');
   };
 
+  const handleModal = async () => {
+    setOpenModel(!openModal)
+  };
+
   return (
     isloading ? 'Loading' :
-      <div style={{ height: openModal ? '100vh' : "100%", width: openModal ? '100vw' : "100%", position: 'relative', overflow: openModal ? 'hidden' : ''}}>
-        <div style={{ height: "100%", width: "100%", background: 'yellow', position: 'absolute', display: openModal ? 'block' : 'none'}}>
-
+      <div style={{ height: openModal ? '100vh' : "100%", width: openModal ? '100vw' : "100%", position: 'relative', overflow: openModal ? 'hidden' : '' }}>
+        <div style={{ height: "100%", minHeight: "600px", width: "500px", background: 'yellow', position: 'absolute', display: openModal ? 'block' : 'none' }}>
+          <CreateProduct />
         </div>
         <div>
           <nav>
-            <SearchProducts onSubmit={() => handleSubmit()} />
+            <SearchProducts onSubmit={() => handleSubmit()} openModal={handleModal} />
           </nav>
           <div style={{ display: "flex" }}>
             <div style={{ display: "flex", marginTop: "8px", justifyContent: "center", width: "15%", flexDirection: "column", height: "600px", padding: "10px" }}>

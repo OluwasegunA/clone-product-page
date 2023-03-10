@@ -6,6 +6,31 @@
   display: flex;
 }
 
+.btn {
+   width: 60px;
+   height: 40px;
+   color: #4dbd54cc;
+   border-radius: 20px;
+   padding: 10px 20px;
+   font-family: 'Lato', sans-serif;
+   font-weight: 500;
+   background: transparent;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   position: relative;
+   display: inline-block;
+    box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+    7px 7px 20px 0px rgba(0,0,0,.1),
+    4px 4px 5px 0px rgba(0,0,0,.1);
+   outline: none;
+ }
+
+ .btn:hover {
+   color: #0b0a0a;
+   background: transparent;
+   box-shadow: none;
+}
+
 .searchTerm {
   width: 100%;
   border: 3px solid #000000;
