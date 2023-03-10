@@ -1,8 +1,11 @@
 import { useContext, useState } from "react";
 import HttpCall from "../../utils/HttpClient";
-import { ProductContext } from '../../ProductContext';
+import { ProductContext } from '../../Contexts/ProductContext';
+import { ModalContext } from "../../Contexts/ModalContext";
+import { FaCross } from "react-icons/fa";
 
 const CreateProduct = ({ productObject }) => {
+   const { openModal, setOpenModal, openCreateForm, setOpenCreateForm, openEditForm } = useContext(ModalContext);
    const [create, setCreate] = useState({
       title: productObject?.title ? productObject?.title : "",
       category: productObject?.category ? productObject?.category : "",
@@ -48,22 +51,23 @@ const CreateProduct = ({ productObject }) => {
    }
 
    return (
-      <form onSubmit={e => handleSubmit(e)}>
-         <div className="wrapper" style={{ width: "500px", height: "500px", marginTop: "30px", marginBottom: "30px", padding: "20px", fontSize: "14px" }}>
-            <div style={{ display: "flex", width: "400px" }}>
-               <input type="text" name={"title"} value={create.title} onChange={e => handleChnage(e)} placeholder="Product Title" required />
-               <input type="text" name={"category"} value={create.category} onChange={e => handleChnage(e)} placeholder="Product Category" />
-            </div>
-            <div style={{ display: "flex", fontSize: "14px" }}>
-               <input type="number" name={"price"} value={create.price} onChange={e => handleChnage(e)} placeholder="Product Price" required />
-               <input type="text" name={"discountPercentage"} value={create.discountPercentage} onChange={e => handleChnage(e)} placeholder="Product discount Percentage" />
-            </div>
-            <div>
-               <input type="text" name={"description"} value={create.description} onChange={e => handleChnage(e)} placeholder="Product Description" />
-            </div>
+      <form onSubmit={e => handleSubmit(e)} style={{ dispaly: "flex", alignItems: "center", background: 'orangered', width: "500px", height: "550px", justifyContent: "center" }}>
+         <div className="" style={{ marginTop: "30px", fontSize: "14px", height: "90%", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "flex-start", padding: "10px" }}>
+            <button type="submit" className="btn" onClick={() => {
+               setOpenModal(!openModal)
+               setOpenCreateForm(!openCreateForm)
+            }}><FaCross />
+            </button>
+            <input type="text" style={{ width: "100%", height: "45px" }} name={"title"} value={create.title} onChange={e => handleChnage(e)} placeholder="Product Title" required />
+            <input type="text" style={{ width: "100%", height: "45px" }} name={"category"} value={create.category} onChange={e => handleChnage(e)} placeholder="Product Category" />
+            <input type="number" style={{ width: "100%", height: "45px" }} name={"price"} value={create.price} onChange={e => handleChnage(e)} placeholder="Product Price" required />
+            <input type="text" style={{ width: "100%", height: "45px" }} name={"discountPercentage"} value={create.discountPercentage} onChange={e => handleChnage(e)} placeholder="Product discount Percentage" />
+            <textarea cols="4" rows="10" style={{ padding: "6px", width: "100%" }} name={"description"} value={create.description} onChange={e => handleChnage(e)} placeholder="Product Description">
+            </textarea>
+            <button style={{ padding: '6px', color: "gray" }} type="submit" onClick={() => {
+               setOpenModal(!openModal)
+            }} >{openCreateForm ? "Create" : "Edit"} Product</button>
          </div>
-
-         <button type="submit">{productObject ? "Edit" : "Create"} Product</button>
       </form>
    );
 }

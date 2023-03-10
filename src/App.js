@@ -6,12 +6,13 @@ import axios from 'axios';
 import HttpCall from './utils/HttpClient';
 import Category from './components/Product/Category';
 import CreateProduct from './components/Product/CreateProduct';
-import { ProductContext } from './ProductContext';
+import { ProductContext } from './Contexts/ProductContext';
+import { ModalContext } from './Contexts/ModalContext';
 
 
 const App = () => {
   const [isloading, setIsLoading] = useState(true);
-  const [openModal, setOpenModel] = useState(false);
+ const {openModal, setOpenModal} = useContext(ModalContext)
   const categories = useContext(ProductContext);
   const currentProducts = useContext(ProductContext);
   const searchQuery = useContext(ProductContext);
@@ -58,19 +59,15 @@ const App = () => {
     searchQuery?.setSearchQuery('');
   };
 
-  const handleModal = async () => {
-    setOpenModel(!openModal)
-  };
-
   return (
     isloading ? 'Loading' :
       <div style={{ height: openModal ? '100vh' : "100%", width: openModal ? '100vw' : "100%", position: 'relative', overflow: openModal ? 'hidden' : '' }}>
-        <div style={{ height: "100%", minHeight: "600px", width: "500px", background: 'yellow', position: 'absolute', display: openModal ? 'block' : 'none' }}>
-          <CreateProduct />
+        <div style={{ justifyContent:"center", alignItems:"center", height: "100%", width: "100%", background: 'rgba(220,220,220, 0.5)', position: 'absolute', display: openModal ? 'flex' : 'none', zIndex:"1000"}}>
+         <CreateProduct/>
         </div>
         <div>
           <nav>
-            <SearchProducts onSubmit={() => handleSubmit()} openModal={handleModal} />
+            <SearchProducts onSubmit={() => handleSubmit()} />
           </nav>
           <div style={{ display: "flex" }}>
             <div style={{ display: "flex", marginTop: "8px", justifyContent: "center", width: "15%", flexDirection: "column", height: "600px", padding: "10px" }}>

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { ProductContext } from '../../ProductContext';
+import { ProductContext } from '../../Contexts/ProductContext';
 import HttpCall from '../../utils/HttpClient';
 
 const Category = (props) => {

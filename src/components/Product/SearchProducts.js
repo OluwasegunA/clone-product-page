@@ -1,10 +1,13 @@
 import React, { useContext } from 'react';
-import { ProductContext } from '../../ProductContext';
+import { ProductContext } from '../../Contexts/ProductContext';
 import '../../style/style.css';
-import { FaSearch, FaPlus } from "react-icons/fa"
+import { FaSearch, FaPlus } from "react-icons/fa";
+import { ModalContext } from "../../Contexts/ModalContext";
 
-const SearchProducts = ({ onSubmit, openModal }) => {
+const SearchProducts = ({ onSubmit }) => {
   const searchQuery = useContext(ProductContext);
+  const { openModal, setOpenModal, openCreateForm, setOpenCreateForm, openEditForm } = useContext(ModalContext);
+
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -20,11 +23,14 @@ const SearchProducts = ({ onSubmit, openModal }) => {
           <div><FaSearch /></div>
         </button>
       </div>
-        <div style={{marginLeft: "20px"}}>
-          <button type="submit" className="btn" onClick={openModal}>
-            <div><FaPlus /></div>
-          </button>
-        </div>
+      <div style={{ marginLeft: "20px" }}>
+        <button type="submit" className="btn" onClick={() => {
+          setOpenModal(!openModal)
+          setOpenCreateForm(!openCreateForm)
+        }}>
+          <div><FaPlus /></div>
+        </button>
+      </div>
     </div>
   );
 }

@@ -2,8 +2,7 @@ import SubImages from "./SubImages";
 import UpdateAndDeleteProduct from "./UpdateAndDeleteProduct";
 
 const ProductCard = (props) => {
-
-   const discountedPrice = (price = props?.price) => {
+    const discountedPrice = (price = props?.price) => {
       return (price - ((props?.discountPercentage / 100) * price));
    }
 
@@ -44,7 +43,7 @@ const ProductCard = (props) => {
                <span>{props?.discountPercentage}%</span>
             </div>
             <div>
-               <UpdateAndDeleteProduct />
+               <UpdateAndDeleteProduct id = {props.id}/>
             </div>
          </div>
       </div>
