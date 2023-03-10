@@ -1,24 +1,89 @@
-import logo from './logo.svg';
 import './App.css';
+import Products from './Products.js';
+import SearchProducts from './components/Product/SearchProducts';
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import HttpCall from './utils/HttpClient';
+import Category from './components/Product/Category';
+import { ProductContext } from './ProductContext';
 
-function App() {
+const App = () => {
+  const [isloading, setIsLoading] = useState(true);
+  const [openModal, setOpenModel] = useState(false);
+  const categories = useContext(ProductContext);
+  const currentProducts = useContext(ProductContext);
+  const searchQuery = useContext(ProductContext);
+
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, [isloading]);
+
+  let baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const fetchProducts = async () => {
+    const httpCall = new HttpCall();
+
+    const resp = await httpCall.makeGetApiCall();
+    const dataProducts = resp.data.products
+    currentProducts.setCurrentProducts([...dataProducts]);
+
+    setIsLoading(false)
+  }
+
+  const fetchCategories = async () => {
+    let url = baseUrl + "/categories";
+    const httpCall = new HttpCall(url);
+
+    const resp = await httpCall.makeGetApiCall();
+    const data = resp.data
+    categories.setCategories([...data]);
+  }
+
+  const fetchBySearch = async (query) => {
+    let url = `${baseUrl}/search?q=${query}`;
+    const httpCall = new HttpCall(url);
+
+    const resp = await httpCall.makeGetApiCall();
+    const data = resp.data.products
+    currentProducts.setCurrentProducts([...data]);
+  }
+
+  const handleSubmit = async () => {
+    // console.log(searchQuery?.searchQuery);
+    await fetchBySearch(searchQuery?.searchQuery);
+    searchQuery?.setSearchQuery('');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    isloading ? 'Loading' :
+      <div style={{ height: openModal ? '100vh' : "100%", width: openModal ? '100vw' : "100%", position: 'relative', overflow: openModal ? 'hidden' : ''}}>
+        <div style={{ height: "100%", width: "100%", background: 'yellow', position: 'absolute', display: openModal ? 'block' : 'none'}}>
+
+        </div>
+        <div>
+          <nav>
+            <SearchProducts onSubmit={() => handleSubmit()} />
+          </nav>
+          <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", marginTop: "8px", justifyContent: "center", width: "15%", flexDirection: "column", height: "600px", padding: "10px" }}>
+              <div style={{ fontSize: "18px", color: "gray", fontWeight: "bolder" }}>
+                <span>Categories</span>
+              </div>
+              <div style={{ alignSelf: "flex-start", padding: "6px" }}>
+                {categories.categories.map((category, index) => {
+                  return (
+                    <Category key={index} category={category} />)
+                })}
+              </div>
+            </div>
+            <div className="">
+              {currentProducts?.currentProducts && <Products products={currentProducts?.currentProducts} />}
+            </div>
+          </div>
+        </div>
+      </div>
   );
 }
 
