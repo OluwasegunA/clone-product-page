@@ -1,11 +1,23 @@
 import SubImages from "./SubImages";
 import UpdateAndDeleteProduct from "./UpdateAndDeleteProduct";
+import { useContext } from "react";
+import { ProductContext } from '../../Contexts/ProductContext';
 
 const ProductCard = (props) => {
-    const discountedPrice = (price = props?.price) => {
-      return (price - ((props?.discountPercentage / 100) * price));
+   const discountedPrice = (price = props?.price) => {
+      return ((price - ((props?.discountPercentage / 100) * price)))
+         .toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+         });
    }
-
+   const { setInput, currentProductData } = useContext(ProductContext)
+   function handleInputChange() {
+      console.log("title", props.title)
+      setInput({
+         title: props.title
+      });
+   }
    return (
       <div className="card-wrapper" style={{ width: "30%", height: "230px", display: "flex", marginBottom: "10px", background: "#ffffff", marginTop: "10px" }}>
          <div style={{ width: "60%", height: "100%", objectFit: "cover", display: "flex", justifyContent: "center", background: "blue", alignItems: "center" }}>
@@ -34,16 +46,13 @@ const ProductCard = (props) => {
                })}</span>
             </div>
             <div className="price" style={{ marginBottom: "5px", fontSize: "20px", color: "black", fontWeight: "bolder" }}>
-               <span>{discountedPrice().toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-               })}</span>
+               <span>{discountedPrice()}</span>
             </div>
             <div className="discountPercentage" style={{ marginBottom: "5px", color: "red" }}>
                <span>{props?.discountPercentage}%</span>
             </div>
             <div>
-               <UpdateAndDeleteProduct id = {props.id}/>
+               <UpdateAndDeleteProduct product={props} />
             </div>
          </div>
       </div>

@@ -5,7 +5,7 @@ import HttpCall from '../../utils/HttpClient';
 const Category = (props) => {
    const [category, setCategory] = useState(props.category);
    const currentCategory = useContext(ProductContext)
-   const currentProducts = useContext(ProductContext);
+   const {currentProducts, setCurrentProducts, currentProductState, setCurrentProductState, dispatch} = useContext(ProductContext);
 
 
    let baseUrl = process.env.REACT_APP_BASE_URL;
@@ -16,7 +16,8 @@ const Category = (props) => {
 
       const resp = await httpCall.makeGetApiCall();
       const data = resp.data.products
-      currentProducts.setCurrentProducts([...data]);
+      setCurrentProducts([...data]);
+      dispatch({ type: 'SEARCH', payload: { searchedProduct: data }});
    }
 
    const handleChange = async (e) => {

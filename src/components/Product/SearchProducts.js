@@ -26,7 +26,7 @@ const SearchProducts = ({ onSubmit }) => {
       <div style={{ marginLeft: "20px" }}>
         <button type="submit" className="btn" onClick={() => {
           setOpenModal(!openModal)
-          setOpenCreateForm(!openCreateForm)
+          setOpenCreateForm(true)
         }}>
           <div><FaPlus /></div>
         </button>
